@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  pg:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '15432:5432'
+    volumes:
+      - /var/lib/postgres/data:/var/lib/postgresql/data
+    networks:
+      - postgres-compose-network
+    container_name: db_postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '16543:80'
+    depends_on:
+      - pg
+    networks:
+      - postgres-compose-network
+    container_name: admin_postgres
+
+networks:
+  postgres-compose-network:
+    driver: bridge
